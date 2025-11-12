@@ -37,8 +37,10 @@ class MainActivity : ComponentActivity() {
                             HomeScreen(innerPadding) {
                                 navController.navigate(
                                     Routes.AddProduct.route,
-                                )
-                            }
+                                ) {
+                                    launchSingleTop = true
+                                }
+                                }
                         }
                         composable(Routes.AddProduct.route) { AddProductScreen(innerPadding) { navController.popBackStack() } }
                     }

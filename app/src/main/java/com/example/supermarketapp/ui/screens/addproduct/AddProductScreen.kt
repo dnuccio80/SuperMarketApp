@@ -27,6 +27,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,14 +42,19 @@ import com.example.supermarketapp.ui.generics.BodyText
 import com.example.supermarketapp.ui.generics.SubtitleText
 import com.example.supermarketapp.ui.generics.TextFieldItem
 import com.example.supermarketapp.ui.generics.TitleText
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
-fun AddProductScreen(innerPadding: PaddingValues, onBackClicked:() -> Unit) {
+fun AddProductScreen(innerPadding: PaddingValues, onBackClicked: () -> Unit) {
 
     var nameProduct by rememberSaveable { mutableStateOf("") }
     var productDescription by rememberSaveable { mutableStateOf("") }
     var priceProduct by rememberSaveable { mutableStateOf("") }
     var imageUri by rememberSaveable { mutableStateOf("") }
+
+    val coroutineScope = rememberCoroutineScope()
+    var isBackButtonClicked by rememberSaveable { mutableStateOf(false) }
 
     val imageLauncher = rememberLauncherForActivityResult(GetContent()) { uri ->
         uri?.let { imageUri = uri.toString() }
@@ -78,7 +84,14 @@ fun AddProductScreen(innerPadding: PaddingValues, onBackClicked:() -> Unit) {
                     tint = Color.White,
                     modifier = Modifier.clickable {
                         // Back to Home Screen
+                        if (isBackButtonClicked) return@clickable
+                        isBackButtonClicked = true
                         onBackClicked()
+                        // Avoid problems for multiple touch
+                        coroutineScope.launch {
+                            delay(500)
+                            isBackButtonClicked = false
+                        }
                     })
             }
             Spacer(modifier = Modifier.weight(1f))

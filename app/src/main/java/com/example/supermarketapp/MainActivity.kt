@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.supermarketapp.ui.screens.addproduct.AddProductScreen
+import com.example.supermarketapp.ui.screens.home.HomeScreen
 import com.example.supermarketapp.ui.theme.SuperMarketAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,7 +24,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             SuperMarketAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-
+//                    HomeScreen(innerPadding)
+                    AddProductScreen(innerPadding)
                 }
             }
         }

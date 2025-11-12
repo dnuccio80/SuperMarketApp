@@ -43,7 +43,7 @@ import com.example.supermarketapp.ui.generics.TextFieldItem
 import com.example.supermarketapp.ui.generics.TitleText
 
 @Composable
-fun AddProductScreen(innerPadding: PaddingValues) {
+fun AddProductScreen(innerPadding: PaddingValues, onBackClicked:() -> Unit) {
 
     var nameProduct by rememberSaveable { mutableStateOf("") }
     var productDescription by rememberSaveable { mutableStateOf("") }
@@ -78,7 +78,7 @@ fun AddProductScreen(innerPadding: PaddingValues) {
                     tint = Color.White,
                     modifier = Modifier.clickable {
                         // Back to Home Screen
-                        TODO()
+                        onBackClicked()
                     })
             }
             Spacer(modifier = Modifier.weight(1f))

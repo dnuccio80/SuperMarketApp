@@ -24,6 +24,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +38,7 @@ import com.example.supermarketapp.ui.generics.TitleText
 import kotlin.math.min
 
 @Composable
-fun HomeScreen(innerPadding: PaddingValues) {
+fun HomeScreen(innerPadding: PaddingValues, onAddProductButtonClicked: () -> Unit) {
     Box(
         Modifier
             .fillMaxSize()
@@ -53,7 +54,7 @@ fun HomeScreen(innerPadding: PaddingValues) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Spacer(modifier = Modifier.size(0.dp))
-            Header()
+            Header { onAddProductButtonClicked() }
             Spacer(modifier = Modifier.size(16.dp))
             LastProduct()
             Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
@@ -63,9 +64,16 @@ fun HomeScreen(innerPadding: PaddingValues) {
             Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
                 TitleText("Todos los productos")
             }
-            FlowRow(maxItemsInEachRow = 2, horizontalArrangement = Arrangement.spacedBy(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            FlowRow(
+                maxItemsInEachRow = 2,
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
                 Card(
-                    modifier = Modifier.widthIn(min = 100.dp).weight(1f).height(380.dp),
+                    modifier = Modifier
+                        .widthIn(min = 100.dp)
+                        .weight(1f)
+                        .height(380.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
                 ) {
                     Column(
@@ -80,7 +88,7 @@ fun HomeScreen(innerPadding: PaddingValues) {
                                 .size(140.dp)
                                 .background(Color.White)
                         )
-                        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart){
+                        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
                             TitleText("Item name")
                         }
                         BodyText("This is a description for a normal simple item")
@@ -88,7 +96,10 @@ fun HomeScreen(innerPadding: PaddingValues) {
                     }
                 }
                 Card(
-                    modifier = Modifier.widthIn(min = 100.dp).weight(1f).height(380.dp),
+                    modifier = Modifier
+                        .widthIn(min = 100.dp)
+                        .weight(1f)
+                        .height(380.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
                 ) {
                     Column(
@@ -103,7 +114,7 @@ fun HomeScreen(innerPadding: PaddingValues) {
                                 .size(140.dp)
                                 .background(Color.White)
                         )
-                        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart){
+                        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
                             TitleText("Item name")
                         }
                         BodyText("This is a description for a normal simple item")
@@ -111,7 +122,10 @@ fun HomeScreen(innerPadding: PaddingValues) {
                     }
                 }
                 Card(
-                    modifier = Modifier.widthIn(min = 100.dp).weight(1f).height(380.dp),
+                    modifier = Modifier
+                        .widthIn(min = 100.dp)
+                        .weight(1f)
+                        .height(380.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
                 ) {
                     Column(
@@ -126,7 +140,7 @@ fun HomeScreen(innerPadding: PaddingValues) {
                                 .size(140.dp)
                                 .background(Color.White)
                         )
-                        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart){
+                        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
                             TitleText("Item name")
                         }
                         BodyText("This is a description for a normal simple item")
@@ -134,7 +148,10 @@ fun HomeScreen(innerPadding: PaddingValues) {
                     }
                 }
                 Card(
-                    modifier = Modifier.widthIn(min = 100.dp).weight(1f).height(380.dp),
+                    modifier = Modifier
+                        .widthIn(min = 100.dp)
+                        .weight(1f)
+                        .height(380.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
                 ) {
                     Column(
@@ -149,7 +166,7 @@ fun HomeScreen(innerPadding: PaddingValues) {
                                 .size(140.dp)
                                 .background(Color.White)
                         )
-                        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart){
+                        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
                             TitleText("Item name")
                         }
                         BodyText("This is a description for a normal simple item")
@@ -165,7 +182,9 @@ fun HomeScreen(innerPadding: PaddingValues) {
 @Composable
 private fun ProductCardItem() {
     Card(
-        modifier = Modifier.widthIn(min = 100.dp, max = 200.dp).height(380.dp),
+        modifier = Modifier
+            .widthIn(min = 100.dp, max = 200.dp)
+            .height(380.dp),
         colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
     ) {
         Column(
@@ -180,7 +199,7 @@ private fun ProductCardItem() {
                     .size(140.dp)
                     .background(Color.White)
             )
-            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart){
+            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
                 TitleText("Item name")
             }
             BodyText("This is a description for a normal simple item")
@@ -207,16 +226,17 @@ private fun StarProductsList() {
 }
 
 @Composable
-private fun Header() {
+private fun Header(onAddProductButtonClicked: () -> Unit) {
     Row(
         Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(modifier = Modifier.weight(1f))
         TitleText("Home")
         Spacer(modifier = Modifier.weight(.6f))
-        BodyText("Add Product")
+        TextButton(
+            onClick = { onAddProductButtonClicked() }
+        ) { BodyText("Añadir producto") }
     }
 }
 

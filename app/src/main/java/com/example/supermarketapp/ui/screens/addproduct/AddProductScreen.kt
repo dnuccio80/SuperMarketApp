@@ -1,5 +1,8 @@
 package com.example.supermarketapp.ui.screens.addproduct
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.GetContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsEndWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -35,6 +39,11 @@ fun AddProductScreen(innerPadding: PaddingValues) {
     var nameProduct by rememberSaveable { mutableStateOf("") }
     var productDescription by rememberSaveable { mutableStateOf("") }
     var priceProduct by rememberSaveable { mutableStateOf("") }
+    var imageUri by rememberSaveable { mutableStateOf("") }
+
+    val imageLauncher = rememberLauncherForActivityResult(GetContent()) { uri ->
+        uri?.let { imageUri = uri.toString() }
+    }
 
     Box(
         modifier = Modifier
@@ -48,6 +57,7 @@ fun AddProductScreen(innerPadding: PaddingValues) {
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.weight(1f))
             TitleText("Añadir un producto")
             TextFieldItem(value = nameProduct, label = "Nombre")
             { newValue ->
@@ -63,6 +73,15 @@ fun AddProductScreen(innerPadding: PaddingValues) {
             }
             Spacer(modifier = Modifier.size(4.dp))
             Button(
+                onClick = { imageLauncher.launch("image/*") },
+                shape = RoundedCornerShape(4.dp),
+                colors = ButtonDefaults.buttonColors(
+                )
+            ) {
+                SubtitleText("Añadir imagen")
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            Button(
                 onClick = { },
                 shape = RoundedCornerShape(4.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -71,6 +90,7 @@ fun AddProductScreen(innerPadding: PaddingValues) {
             ) {
                 SubtitleText("Añadir producto")
             }
+            Spacer(modifier = Modifier.size(32.dp))
         }
     }
 
@@ -87,7 +107,7 @@ private fun TextFieldItem(
         value = value,
         onValueChange = {
             if (isInt) {
-                if(!it.isDigitsOnly()) return@TextField
+                if (!it.isDigitsOnly()) return@TextField
                 onValueChange(it)
             } else {
                 onValueChange(it)

@@ -32,13 +32,14 @@ import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.supermarketapp.ui.generics.BodyText
 import com.example.supermarketapp.ui.generics.SubtitleText
 import com.example.supermarketapp.ui.generics.TitleText
 import kotlin.math.min
 
 @Composable
-fun HomeScreen(innerPadding: PaddingValues, onAddProductButtonClicked: () -> Unit) {
+fun HomeScreen(innerPadding: PaddingValues, viewModel: HomeViewModel = hiltViewModel(), onAddProductButtonClicked: () -> Unit, ) {
     Box(
         Modifier
             .fillMaxSize()
@@ -54,7 +55,9 @@ fun HomeScreen(innerPadding: PaddingValues, onAddProductButtonClicked: () -> Uni
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Spacer(modifier = Modifier.size(0.dp))
-            Header { onAddProductButtonClicked() }
+            Header {
+                onAddProductButtonClicked()
+            }
             Spacer(modifier = Modifier.size(16.dp))
             LastProduct()
             Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {

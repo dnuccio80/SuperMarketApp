@@ -12,15 +12,4 @@ class HomeViewModel @Inject constructor(private val storeService: StoreService):
         storeService.getLastProduct()
     }
 
-    fun addProduct() {
-
-        val city: HashMap<String, String> = hashMapOf(
-            "name" to "Los Angeles",
-            "state" to "CA",
-            "country" to "USA",
-        )
-
-        storeService.addProduct(city)
-    }
-
 }

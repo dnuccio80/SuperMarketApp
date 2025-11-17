@@ -146,7 +146,7 @@ fun AddProductScreen(
                         viewModel.addProduct(
                             Product(
                                 id = generateProductId(),
-                                imageUri = imageUri!!,
+                                imageUri = imageUri!!.toString(),
                                 name = nameProduct,
                                 description = productDescription,
                                 price = priceProduct.toInt()

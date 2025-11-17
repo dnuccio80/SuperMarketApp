@@ -3,9 +3,9 @@ package com.example.supermarketapp.domain.models
 import android.net.Uri
 
 data class Product(
-    val id:String,
-    val imageUri:Uri,
-    val name:String,
-    val description:String,
-    val price:Int,
+    val id:String? = null,
+    val imageUri:String? = null,
+    val name:String? = null,
+    val description:String? = null,
+    val price:Int? = null,
 )

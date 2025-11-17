@@ -8,43 +8,55 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val storeService: StoreService):ViewModel() {
+class HomeViewModel @Inject constructor(private val storeService: StoreService) : ViewModel() {
 
-    private val _lastProduct = MutableStateFlow<Product?>(null)
-    val lastProduct:StateFlow<Product?> = _lastProduct
+    private val _uiState = MutableStateFlow(UIState())
+    val uiState: StateFlow<UIState?> = _uiState
 
-    private val _starredProducts = MutableStateFlow<List<Product?>?>(null)
-    val starredProducts:StateFlow<List<Product?>?> = _starredProducts
+    fun getUIInfo() {
+        getLastProduct()
+        getStarredProducts()
+        getAllProducts()
+    }
 
-    private val _allProducts = MutableStateFlow<List<Product?>?>(null)
-    val allProducts:StateFlow<List<Product?>?> = _allProducts
-
-    fun getLastProduct() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _lastProduct.value = storeService.getLastProduct()
+    private fun getLastProduct() {
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                storeService.getLastProduct()
+            }
+            _uiState.update { it.copy(lastProduct = result) }
         }
     }
 
-    fun getStarredProducts() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _starredProducts.value = storeService.getStarredProducts()
+    private fun getStarredProducts() {
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                storeService.getStarredProducts()
+            }
+            _uiState.update { it.copy(starredProducts = result) }
         }
     }
 
-    fun getAllProducts() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _allProducts.value = storeService.getAllProducts()
+    private fun getAllProducts() {
+        viewModelScope.launch {
+
+            val result = withContext(Dispatchers.IO) {
+                storeService.getAllProducts()
+            }
+            _uiState.update { it.copy(allProducts = result) }
         }
     }
 
 }
 
-sealed class UIState() {
-    val lastProduct:Product? = null
-    val starredProducts:List<Product>? = null
-    val allProducts:List<Product>? = null
-}
+data class UIState(
+    val lastProduct: Product? = null,
+    val starredProducts: List<Product?> = emptyList(),
+    val allProducts: List<Product?> = emptyList(),
+)

@@ -1,5 +1,6 @@
 package com.example.supermarketapp.ui.screens.home
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,7 +20,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -44,49 +47,52 @@ fun HomeScreen(
 ) {
 
     LaunchedEffect(true) {
-        viewModel.getLastProduct()
-        viewModel.getStarredProducts()
-        viewModel.getAllProducts()
+
+        viewModel.getUIInfo()
     }
 
-    val lastProduct by viewModel.lastProduct.collectAsState()
-    val starredProducts by viewModel.starredProducts.collectAsState()
-    val allProducts by viewModel.allProducts.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
-    Box(
-        Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
-            .background(Color.Black.copy(.9f))
-    ) {
-        Column(
+    Log.i("Damian", uiState.toString())
+
+    if (uiState == null) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+    } else {
+        Box(
             Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .fillMaxSize()
+                .padding(innerPadding)
+                .background(Color.Black.copy(.9f))
         ) {
-            Spacer(modifier = Modifier.size(0.dp))
-            Header {
-                onAddProductButtonClicked()
-            }
-            Spacer(modifier = Modifier.size(16.dp))
-            LastProduct(lastProduct)
-            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
-                TitleText("Productos destacados")
-            }
-            StarProductsList(starredProducts)
-            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
-                TitleText("Todos los productos")
-            }
-            FlowRow(
-                maxItemsInEachRow = 2,
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                if (allProducts != null) {
-                    allProducts?.let { list ->
+                Spacer(modifier = Modifier.size(0.dp))
+                Header {
+                    onAddProductButtonClicked()
+                }
+                Spacer(modifier = Modifier.size(16.dp))
+                LastProduct(uiState!!.lastProduct)
+                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
+                    TitleText("Productos destacados")
+                }
+                StarProductsList(uiState!!.starredProducts)
+                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
+                    TitleText("Todos los productos")
+                }
+                FlowRow(
+                    maxItemsInEachRow = 2,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    uiState!!.allProducts.let { list ->
                         list.forEach { product ->
                             product?.let {
                                 Card(
@@ -124,142 +130,8 @@ fun HomeScreen(
 
                         }
                     }
-                } else {
-                    Card(
-                        modifier = Modifier
-                            .widthIn(min = 100.dp)
-                            .weight(1f)
-                            .height(380.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
-                    ) {
-                        Column(
-                            Modifier
-                                .fillMaxSize()
-                                .padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.SpaceEvenly
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(140.dp)
-                                    .background(Color.White)
-                            )
-                            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
-                                TitleText("Item name")
-                            }
-                            BodyText("This is a description for a normal simple item")
-                            SubtitleText("$12.500")
-                        }
-                    }
-                    Card(
-                        modifier = Modifier
-                            .widthIn(min = 100.dp)
-                            .weight(1f)
-                            .height(380.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
-                    ) {
-                        Column(
-                            Modifier
-                                .fillMaxSize()
-                                .padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.SpaceEvenly
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(140.dp)
-                                    .background(Color.White)
-                            )
-                            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
-                                TitleText("Item name")
-                            }
-                            BodyText("This is a description for a normal simple item")
-                            SubtitleText("$12.500")
-                        }
-                    }
-                    Card(
-                        modifier = Modifier
-                            .widthIn(min = 100.dp)
-                            .weight(1f)
-                            .height(380.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
-                    ) {
-                        Column(
-                            Modifier
-                                .fillMaxSize()
-                                .padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.SpaceEvenly
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(140.dp)
-                                    .background(Color.White)
-                            )
-                            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
-                                TitleText("Item name")
-                            }
-                            BodyText("This is a description for a normal simple item")
-                            SubtitleText("$12.500")
-                        }
-                    }
-                    Card(
-                        modifier = Modifier
-                            .widthIn(min = 100.dp)
-                            .weight(1f)
-                            .height(380.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
-                    ) {
-                        Column(
-                            Modifier
-                                .fillMaxSize()
-                                .padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.SpaceEvenly
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(140.dp)
-                                    .background(Color.White)
-                            )
-                            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
-                                TitleText("Item name")
-                            }
-                            BodyText("This is a description for a normal simple item")
-                            SubtitleText("$12.500")
-                        }
-                    }
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun ProductCardItem() {
-    Card(
-        modifier = Modifier
-            .widthIn(min = 100.dp, max = 200.dp)
-            .height(380.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
-    ) {
-        Column(
-            Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(140.dp)
-                    .background(Color.White)
-            )
-            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
-                TitleText("Item name")
-            }
-            BodyText("This is a description for a normal simple item")
-            SubtitleText("$12.500")
         }
     }
 }
@@ -378,7 +250,3 @@ private fun LastProduct(product: Product?) {
 
 }
 
-//
-//data class UIState(
-//
-//)

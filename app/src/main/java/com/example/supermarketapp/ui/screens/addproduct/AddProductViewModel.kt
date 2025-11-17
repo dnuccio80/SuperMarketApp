@@ -25,7 +25,7 @@ class AddProductViewModel @Inject constructor(private val storeService: StoreSer
             _isLoading.value = true
             withContext(Dispatchers.IO) {
                 try {
-                    storeService.addProduct(product, isStarred)
+                    storeService.addProduct(product.toData(), isStarred)
                 } catch (e: Exception) {
                     Log.i("Damian", e.toString())
                 }

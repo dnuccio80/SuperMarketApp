@@ -1,6 +1,7 @@
 package com.example.supermarketapp.data
 
 import androidx.core.net.toUri
+import com.example.supermarketapp.data.response.ProductResponse
 import com.example.supermarketapp.domain.models.Product
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -19,7 +20,7 @@ class StoreService @Inject constructor(
         const val STARRED_PRODUCTS = "starredProducts"
     }
 
-    suspend fun addProduct(product: Product, isStarred: Boolean) {
+    suspend fun addProduct(product: ProductResponse, isStarred: Boolean) {
 
         storageService.uploadImage(product.imageUri!!.toUri(), product.id.orEmpty())
 
@@ -40,7 +41,7 @@ class StoreService @Inject constructor(
     suspend fun getLastProduct():Product? {
         val collection = store.collection(LAST_PRODUCT).get().await()
         if(collection.size() == 0) return null
-        val product = collection.documents.elementAt(0).toObject<Product>()
+        val product = collection.documents.elementAt(0).toObject<ProductResponse>()?.toDomain()
         val image = storageService.downloadImage(product?.id!!)
         return product.copy(imageUri = image.toString())
     }
@@ -48,7 +49,7 @@ class StoreService @Inject constructor(
     suspend fun getStarredProducts():List<Product?> {
         val collection = store.collection(STARRED_PRODUCTS).get().await()
         val productList = collection.documents.map { document ->
-            document.toObject<Product>()
+            document.toObject<ProductResponse>()?.toDomain()
         }
         val newProductList = productList.map { product ->
             product?.copy(imageUri = storageService.downloadImage(product.id!!).toString())
@@ -59,7 +60,7 @@ class StoreService @Inject constructor(
     suspend fun getAllProducts():List<Product?> {
         val collection = store.collection(ALL_PRODUCTS).get().await()
         val productList = collection.documents.map { document ->
-            document.toObject<Product>()
+            document.toObject<ProductResponse>()?.toDomain()
         }
         val newProductList =  productList.map { product ->
             product?.copy(imageUri = storageService.downloadImage(product.id!!).toString())

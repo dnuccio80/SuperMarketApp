@@ -1,4 +1,4 @@
-package com.example.supermarketapp.di
+package com.example.supermarketapp.data.di
 
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
